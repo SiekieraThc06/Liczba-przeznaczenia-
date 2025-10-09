@@ -1,46 +1,26 @@
-// Funkcja przypisująca wartość liczbową literom (system Pitagorasa)
-function wartoscLitery(znak) {
-  const litery = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-  const indeks = litery.indexOf(znak.toUpperCase());
-  if (indeks === -1) return 0;
-  return (indeks % 9) + 1;
-}
+document.getElementById("dataUr").addEventListener("input", function () {
+        let value = this.value;
 
-// Funkcja obliczająca liczbę przeznaczenia
-function obliczLiczbePrzeznaczenia(imie) {
-  const suma = imie
-    .toUpperCase()
-    .split("")
-    .map(wartoscLitery)
-    .reduce((a, b) => a + b, 0);
 
-  // Redukcja do jednej cyfry lub liczby mistrzowskiej
-  let liczba = suma;
-  while (![11, 22, 33].includes(liczba) && liczba > 9) {
-    liczba = liczba
-      .toString()
-      .split("")
-      .map(Number)
-      .reduce((a, b) => a + b, 0);
-  }
-  return liczba;
-}
+        value = value.replace(/\D/g, "");
 
-// Obsługa przycisku
-document.getElementById("przyciskOblicz").addEventListener("click", () => {
-  const imie = document.getElementById("imieInput").value.trim();
-  const wynikDiv = document.getElementById("wynik");
+        if (value.length > 8) {
+          value = value.slice(0, 8);
+        }
 
-  if (!imie) {
-    wynikDiv.textContent = "Proszę wpisać imię i nazwisko.";
-    return;
-  }
+        let sum = 0;
+        for (let char of value) {
+          sum += parseInt(char, 10); 
+        }
+        console.log("Suma cyfr:", sum);
 
-  const liczba = obliczLiczbePrzeznaczenia(imie);
-  const data = new Date().toLocaleDateString("pl-PL");
+        while (sum > 9) {
+          let sumStr = sum.toString();
+          sum = 0;
+          for (let char of sumStr) {
+            sum += parseInt(char, 10);
+          }
+        }
 
-  wynikDiv.innerHTML = `
-    <p><strong>Twoja liczba przeznaczenia:</strong> ${liczba}</p>
-    <p>Data obliczenia: ${data}</p>
-  `;
-});
+        console.log("Suma 2 cyfr:", sum);
+      });
