@@ -1,12 +1,8 @@
+// Ograniczenie do cyfr dla pola daty urodzenia
 document.getElementById("dataUr").addEventListener("input", function () {
   let value = this.value;
-
   value = value.replace(/\D/g, ""); // tylko cyfry
-
-  if (value.length > 8) {
-    value = value.slice(0, 8);
-  }
-
+  if (value.length > 8) value = value.slice(0, 8);
   this.value = value;
 });
 
@@ -45,34 +41,31 @@ function wartoscLiterowa(imieNazwisko) {
   return redukujDoJednejCyfry(suma);
 }
 
-// Główna funkcja obliczająca liczbę przeznaczenia
+// Obliczanie liczby przeznaczenia osobno dla daty i dla imienia
 document.getElementById("przyciskOblicz").addEventListener("click", function () {
   const imieNazwisko = document.getElementById("imieNazwisko").value.trim();
   const dataUr = document.getElementById("dataUr").value.trim();
-  const wynikDiv = document.getElementById("wynik");
 
+  const wynikData = document.getElementById("wynikData");
+  const wynikImie = document.getElementById("wynikImie");
+
+  // Liczba z daty urodzenia
   if (dataUr === "") {
-    wynikDiv.textContent = "Wpisz datę urodzenia!";
-    return;
+    wynikData.textContent = "Wpisz datę urodzenia!";
+  } else {
+    let sumaDaty = 0;
+    for (let char of dataUr) {
+      sumaDaty += parseInt(char, 10);
+    }
+    const liczbaDaty = redukujDoJednejCyfry(sumaDaty);
+    wynikData.textContent = `Liczba z daty urodzenia: ${liczbaDaty}`;
   }
 
-  // Suma z daty urodzenia
-  let sumaDaty = 0;
-  for (let char of dataUr) {
-    sumaDaty += parseInt(char, 10);
+  // Liczba z imienia i nazwiska
+  if (imieNazwisko === "") {
+    wynikImie.textContent = "Wpisz imię i nazwisko!";
+  } else {
+    const liczbaImienia = wartoscLiterowa(imieNazwisko);
+    wynikImie.textContent = `Liczba z imienia i nazwiska: ${liczbaImienia}`;
   }
-  const liczbaZDaty = redukujDoJednejCyfry(sumaDaty);
-
-  // Suma z imienia i nazwiska
-  const liczbaZImienia = imieNazwisko ? wartoscLiterowa(imieNazwisko) : 0;
-
-  // Połączenie obu wartości
-  let wynikLaczny = liczbaZDaty + liczbaZImienia;
-  const liczbaPrzeznaczenia = redukujDoJednejCyfry(wynikLaczny);
-
-  let tekstWyniku = imieNazwisko
-    ? `${imieNazwisko}, Twoja liczba przeznaczenia to: ${liczbaPrzeznaczenia}`
-    : `Twoja liczba przeznaczenia to: ${liczbaPrzeznaczenia}`;
-
-  wynikDiv.textContent = tekstWyniku;
 });
